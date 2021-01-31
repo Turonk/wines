@@ -12,14 +12,19 @@ env = Environment(
 )
 template = env.get_template('template.html')
 
-# Расчет количества лет в заголовок
-start = datetime.datetime(year=1920, month=1, day=1)
-now = datetime.datetime.now()
 
-delta = now - start
-delta = int(delta.days // 365)
+YEAR_BASE = 1920
+age_winery = datetime.datetime.now().year - YEAR_BASE
 
-# Считывание таблицы вин
+
+if (age_winery % 10) == 1 and (age_winery % 100) != 11:
+    numeral_year = 'год'
+elif (age_winery % 10) in [2, 3, 4] and (age_winery % 100) not in [12, 13, 14]:
+    numeral_year = 'года'
+else:
+    numeral_year = 'лет'
+
+
 excel_data_df = pandas.read_excel('wine3.xlsx', na_values=['N/A', 'NA'],
                                   keep_default_na=False)
 
@@ -29,7 +34,7 @@ for wine in wines:
     groups_wines[wine['Категория']].append(wine)
 
 
-rendered_page = template.render(groups=groups_wines, years_old=delta)
+rendered_page = template.render(groups=groups_wines, years_old=age_winery, numeral_year=numeral_year)
 
 with open('index.html', 'w', encoding="utf8") as file:
     file.write(rendered_page)
