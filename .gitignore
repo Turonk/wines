@@ -3,5 +3,17 @@ env/
 venv/
 .venv
 .venv/
-.vscode/
+
+__pycache__/
+*.py[cod]
+
+.idea
+.DS_Store
+.AppleDouble
+.LSOverride
+
+.replit
+
+*.xlsx
+index.html
 
