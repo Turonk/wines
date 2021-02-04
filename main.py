@@ -3,8 +3,10 @@ from collections import defaultdict
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 
+import argparse
 import datetime
 import pandas
+
 
 env = Environment(
     loader=FileSystemLoader('.'),
@@ -12,6 +14,9 @@ env = Environment(
 )
 template = env.get_template('template.html')
 
+parser = argparse.ArgumentParser(description='File in xlsx format with data for the site')
+parser.add_argument('src_file', nargs='?', default='wine3', type=str, help='Input data file for the site')
+args = parser.parse_args()
 
 YEAR_BASE = 1920
 age_winery = datetime.datetime.now().year - YEAR_BASE
@@ -25,7 +30,7 @@ else:
     numeral_year = 'лет'
 
 
-excel_data_df = pandas.read_excel('wine3.xlsx', na_values=['N/A', 'NA'],
+excel_data_df = pandas.read_excel(f'{args.src_file}.xlsx', na_values=['N/A', 'NA'],
                                   keep_default_na=False)
 
 wines = excel_data_df.to_dict(orient='records')
