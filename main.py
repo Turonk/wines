@@ -1,12 +1,10 @@
-from http.server import HTTPServer, SimpleHTTPRequestHandler
-from collections import defaultdict
-from jinja2 import Environment, FileSystemLoader, select_autoescape
-
-
 import argparse
 import datetime
-import pandas
+from collections import defaultdict
+from http.server import HTTPServer, SimpleHTTPRequestHandler
 
+import pandas
+from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 env = Environment(
     loader=FileSystemLoader('.'),
@@ -21,14 +19,12 @@ args = parser.parse_args()
 YEAR_BASE = 1920
 age_winery = datetime.datetime.now().year - YEAR_BASE
 
-
 if (age_winery % 10) == 1 and (age_winery % 100) != 11:
     numeral_year = 'год'
 elif (age_winery % 10) in [2, 3, 4] and (age_winery % 100) not in [12, 13, 14]:
     numeral_year = 'года'
 else:
     numeral_year = 'лет'
-
 
 excel_data_df = pandas.read_excel(f'{args.src_file}.xlsx', na_values=['N/A', 'NA'],
                                   keep_default_na=False)
@@ -38,6 +34,12 @@ groups_wines = defaultdict(list)
 for wine in wines:
     groups_wines[wine['Категория']].append(wine)
 
+# for c, list_value in groups_wines.items():
+#     print(list_value)
+#     for category, name, grade, price, image, sale in list_value:
+#          #(category, val), name, grade, price, image, sale = item.items()
+#          print(type(category))
+#          print(name)
 
 rendered_page = template.render(groups=groups_wines, years_old=age_winery, numeral_year=numeral_year)
 
