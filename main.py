@@ -44,12 +44,13 @@ def main():
                                       keep_default_na=False)
 
     wines = excel_data_df.to_dict(orient='records')
+
     groups_wines = defaultdict(list)
     for wine in wines:
         groups_wines[wine['Категория']].append(wine)
-
+    groups_wines = sorted(groups_wines.items())
     template = get_template()
-    rendered_page = template.render(groups=groups_wines, years_old=age_winery,
+    rendered_page = template.render(assortment=groups_wines, years_old=age_winery,
                                     numeral_year=numeral_year)
 
     with open('index.html', 'w', encoding="utf8") as file:
