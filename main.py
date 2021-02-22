@@ -18,7 +18,7 @@ def get_template():
     return template
 
 
-def get_age():
+def get_age_winery():
     age_winery = datetime.datetime.now().year - YEAR_BASE
 
     if (age_winery % 10) == 1 and (age_winery % 100) != 11:
@@ -35,9 +35,8 @@ def main():
         description='File in xlsx format with data for the site')
     parser.add_argument('src_file', nargs='?', default='wine', type=str, help='Input data file for the site')
     args = parser.parse_args()
-    age_winery, numeral_year = get_age()
-    excel_data_df = pandas.read_excel(f'{args.src_file}.xlsx', na_values=['N/A', 'NA'], keep_default_na=False)
 
+    excel_data_df = pandas.read_excel(f'{args.src_file}.xlsx', na_values=['N/A', 'NA'], keep_default_na=False)
     wines = excel_data_df.to_dict(orient='records')
 
     groups_wines = defaultdict(list)
@@ -46,7 +45,7 @@ def main():
     groups_wines = sorted(groups_wines.items())
 
     template = get_template()
-
+    age_winery, numeral_year = get_age_winery()
     rendered_page = template.render(assortment=groups_wines,
                                     years_old=age_winery,
                                     numeral_year=numeral_year)
