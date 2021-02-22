@@ -18,30 +18,25 @@ def get_template():
     return template
 
 
-def culc_age():
+def get_age():
     age_winery = datetime.datetime.now().year - YEAR_BASE
 
     if (age_winery % 10) == 1 and (age_winery % 100) != 11:
         numeral_year = 'год'
-    elif (age_winery % 10) in [2, 3, 4] and (age_winery % 100) not in [12, 13,
-                                                                       14]:
+    elif (age_winery % 10) in [2, 3, 4] and (age_winery % 100) not in [12, 13, 14]:
         numeral_year = 'года'
     else:
         numeral_year = 'лет'
-
     return age_winery, numeral_year
 
 
 def main():
     parser = argparse.ArgumentParser(
         description='File in xlsx format with data for the site')
-    parser.add_argument('src_file', nargs='?', default='wine', type=str,
-                        help='Input data file for the site')
+    parser.add_argument('src_file', nargs='?', default='wine', type=str, help='Input data file for the site')
     args = parser.parse_args()
-    age_winery, numeral_year = culc_age()
-    excel_data_df = pandas.read_excel(f'{args.src_file}.xlsx',
-                                      na_values=['N/A', 'NA'],
-                                      keep_default_na=False)
+    age_winery, numeral_year = get_age()
+    excel_data_df = pandas.read_excel(f'{args.src_file}.xlsx', na_values=['N/A', 'NA'], keep_default_na=False)
 
     wines = excel_data_df.to_dict(orient='records')
 
@@ -49,8 +44,11 @@ def main():
     for wine in wines:
         groups_wines[wine['Категория']].append(wine)
     groups_wines = sorted(groups_wines.items())
+
     template = get_template()
-    rendered_page = template.render(assortment=groups_wines, years_old=age_winery,
+
+    rendered_page = template.render(assortment=groups_wines,
+                                    years_old=age_winery,
                                     numeral_year=numeral_year)
 
     with open('index.html', 'w', encoding="utf8") as file:
