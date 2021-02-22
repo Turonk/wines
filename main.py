@@ -19,16 +19,16 @@ def get_template():
 
 
 def get_age_winery():
-    age_winery = datetime.datetime.now().year - YEAR_BASE
+    winery_age = datetime.datetime.now().year - YEAR_BASE
 
-    if (age_winery % 10) == 1 and (age_winery % 100) != 11:
+    if (winery_age % 10) == 1 and (winery_age % 100) != 11:
         numeral_year = 'год'
-    elif (age_winery % 10) in [2, 3, 4] and \
-            (age_winery % 100) not in [12, 13, 14]:
+    elif (winery_age % 10) in [2, 3, 4] and \
+            (winery_age % 100) not in [12, 13, 14]:
         numeral_year = 'года'
     else:
         numeral_year = 'лет'
-    return age_winery, numeral_year
+    return winery_age, numeral_year
 
 
 def main():
